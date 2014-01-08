@@ -1,0 +1,22 @@
+{
+  "name": "Kelvi - Stackoverflow Questions board",
+  "description": "Kelvi - Stackoverflow Questions board",
+  "manifest_version":2,
+  "version": "0.1",
+  "app": {
+    "launch": {
+        "local_path": "kelvi.html"
+    }
+
+  },
+  
+  "icons": { "16": "calculator-16.png", "128": "calculator-128.png" },
+  
+  "permissions" : [
+    "https://*.stackoverflow.com/",
+    "storage"
+  ],
+  
+  "content_security_policy": "script-src https://api.stackoverflow.com/;object-src https://api.stackoverflow.com/;"
+
+}

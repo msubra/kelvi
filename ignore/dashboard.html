@@ -1,0 +1,53 @@
+
+<!doctype html>
+<html ng-app>
+
+<head>
+
+	<link rel="stylesheet" href="style.css">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+	<script src="js/cache.js"></script>
+	<script src="js/dashboard.js"></script>
+	<script src="js/app.js"></script>
+
+</head>
+
+
+<body ng-controller="KelviController">
+
+	<div id="app">
+		<section class="_topic" ng-repeat="panel in panels" ng-init="panel.init()">
+			<h2>{{panel.topic}}<span> <small><a ng-click="panel.update()">R</a></small></span></h2> 
+
+			<div class="container row">
+
+				<section class="watch" ng-repeat="watch in panel.watches()">
+					<div class="col">
+						<h3>{{watch.title}} <small>C</small></h3>
+						<ul class="questions">
+							<li ng-repeat="qn in questions(panel,watch)" class="question" >
+								<a target="_blank" href="{{SO_URL}}{{qn.url}}" title="{{qn.title}} - answers:({{qn.answers}}) up:({{qn.up_vote}}) down:({{qn.down_vote}})">
+									{{qn.title}}
+								</a>
+								 (<small>
+								 	<span class="answers_count" title="total answers">A:{{qn.answers}}</span> - <span class="up_vote_count" title="up votes">U:{{qn.up_vote}}</span>/<span class="down_vote_count" title="down votes">D:{{qn.down_vote}}</span>
+								 </small>)
+							</li>
+						</ul>
+					</div>
+				</section>
+
+			</div>
+			<span  ng-init="panel.update()"></span>
+		</section>
+	</div>
+
+	<div id="config" ng-hide="true">
+	</div>
+
+</body>
+
+</html>

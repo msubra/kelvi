@@ -1,0 +1,122 @@
+body
+{
+	font-family: "monospace","courier","courier new";
+	font-weight: normal;
+}
+
+h3 small, h2 small
+{
+	font-size: 0.6em;
+	text-transform: none;
+}
+
+#customize ul.topics
+{
+	list-style: none;
+	margin-left: -10px;
+}
+
+.highlight { 
+	background-color: gold; 
+}
+
+
+.watch-tag
+{
+	margin: 2px;
+}
+.clickable
+{
+	cursor: pointer;
+	border-bottom: 1px #949481 solid;
+}
+
+.reload
+{
+	cursor: pointer;
+	margin-left: -10px;
+}
+
+.underline
+{
+	border-bottom: 2px red solid;
+}
+
+/* screen width >= 1024px - desktop sizes */
+@media screen and (min-width: 1200px) {
+	.topic
+	{
+		position: relative;
+		float:left;
+		width:32.5%;
+		height: 260px;
+	}
+
+}
+
+/* screen width < 1024px - desktop sizes */
+@media screen and (max-width: 1200px) {
+	.topic
+	{
+		position: relative;
+		float:left;
+		width:48%;
+		height: 260px;
+	}
+
+}
+
+
+.row
+{
+	display:inline-block;
+	/*border: 1px #000 solid;*/
+	width: 100%;
+}
+
+.row .col
+{
+	float: left;
+	/*border: 1px #CCC solid;*/
+	width: 32%;
+}
+
+.topic h3
+{
+	border-bottom: 1px blue solid;
+	width: 100%;
+}
+
+ul.questions
+{
+	/*font-size: 12px;*/
+}
+
+ul.questions li a
+{
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.watch h3
+{
+	text-transform:uppercase;
+}
+
+li.question span.answers_count
+{
+	color: blue;
+	font-weight: bold;
+}
+
+li.question span.up_vote_count
+{
+	color: green;
+	font-weight: bold;
+}
+
+li.question span.down_vote_count
+{
+	color: red;
+	font-weight: bold;
+}
