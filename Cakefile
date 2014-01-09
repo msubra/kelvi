@@ -11,14 +11,68 @@ target_app_dir = "#{target_dir}/app"
 target_chrome_app_dir = "#{target_dir}/chrome-app"
 
 
-task 'say:hello', 'Desc', ->
-	console.log 'Hello'
+###
+
+/build - contains all the built artifacts
+/build/kelvi-<version>.zip  - contains the zip builds for various versions
+/build/kelvi-latest.zip  - the latest build
+/build/kelvi-latest-chrome-app.zip  - the latest chrome-app build
+
+###
+
+build_dir = "build"
+CURRENT_VERSION = "1.0"
+
+task 'create:builds', 'create builds',  ->
+    #hold all artifacts to be built in temporary folder /target/
+    invoke 'copy:dependencies'
+
+    #compile app
+    invoke 'compile:app'
+
+    #compile compile chrome app
+    invoke 'compile:chrome-app'
+
+    #create zip packages
+    invoke 'create:kelvi-zip'
+    invoke 'create:kelvi-chrome-app-zip'
+
+    #copy built artifacts to /build folder
+    fs.mkdir "#{build_dir}"
+    ncp "#{target_app_dir}/*.zip", build_dir
+
+
+#recursively delete a folder
+rmr = (path) ->
+    if fs.existsSync path
+        fs.readdirSync(path).forEach((file,index)->
+            curPath = path + "/" + file
+
+            if fs.statSync(curPath).isDirectory()
+                rmr curPath
+                fs.rmdirSync curPath
+            else
+                fs.unlinkSync curPath
+        )
+
+cleanCreateFolder = (folder) ->
+    fs.exists folder,(exists) ->
+        if exists
+            console.log "#{folder} exists. removing"
+            rmr folder
+        console.log "creating folder #{folder}" 
+        fs.mkdir folder, (args) ->
+
+createFolderIfNotExists = (folder) ->
+    fs.exists folder,(exists) ->
+        if not exists
+            console.log "creating folder #{folder}" 
+            fs.mkdir folder, (args) ->
 
 task 'create:target', 'create target folder', ->
-    #create target folder
-    fs.mkdir "#{target_dir}"
-    fs.mkdir "#{target_app_dir}"
-
+    folders = [target_dir,target_app_dir]
+    for folder in folders
+        cleanCreateFolder folder
 
 task 'copy:dependencies', 'copy dependencies', ->
 
@@ -26,12 +80,12 @@ task 'copy:dependencies', 'copy dependencies', ->
     invoke 'create:target'
 
     folders = [
-        'css/'
+        'css/',
         'js/'
     ]
 
     for file in folders
-        fs.mkdir "#{target_app_dir}/#{file}"
+        createFolderIfNotExists "#{target_app_dir}/#{file}"
 
     dependencies = [
         'kelvi.html',
@@ -43,10 +97,11 @@ task 'copy:dependencies', 'copy dependencies', ->
     ]
 
     for file in dependencies
-        console.log "reading from #{file} and writing to #{target_app_dir}/#{file}"
-        fs.createReadStream(file).pipe(fs.createWriteStream("#{target_app_dir}/#{file}"));
+        if fs.existsSync #{target_app_dir}
+            console.log "reading from #{file} and writing to #{target_app_dir}/#{file}"
+            #fs.createReadStream(file).pipe(fs.createWriteStream("#{target_app_dir}/#{file}"))
 
-task 'create:dist', 'create distro', ->
+task 'compile:app', 'create distro', ->
     console.log 'Creating dir ./dist'
 
     invoke 'create:target'
@@ -74,10 +129,10 @@ task 'create:dist', 'create distro', ->
                 console.log 'SUCCESS!'
 
 
-task 'create:chrome-app', 'create chrome app distro', ->
+task 'compile:chrome-app', 'create chrome app distro', ->
 
     #create the basic distro
-    invoke 'create:dist'
+    invoke 'compile:app'
 
     # create a seperate app directory  as /target/chrome-app
     
