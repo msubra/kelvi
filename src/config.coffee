@@ -1,5 +1,9 @@
-#get the instance of localstorage
-jaadi = Jaadi.createInstance("localstorage")
+#get the instance of localstorage. if not available, localStorage may not be supported, so get cookie storage
+try
+	jaadi = Jaadi.createInstance("localstorage")
+catch
+	jaadi = Jaadi.createInstance("cookie")
+
 dabba = jaadi
 
 GlobalConfig=
