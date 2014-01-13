@@ -2,7 +2,7 @@
 try
 	jaadi = Jaadi.createInstance("localstorage")
 catch
-	jaadi = Jaadi.createInstance("cookie")
+	jaadi = Jaadi.createInstance("dom")
 
 dabba = jaadi
 
