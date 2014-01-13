@@ -1,15 +1,18 @@
 fs = require 'fs'
 
+rimraf = require('rimraf')
 ncp = require('ncp').ncp
 ncp.limit = 16;
 alreadyRan = no
 {exec} = require 'child_process'
+zip = new require('node-zip')();
+archiver = require 'archiver'
 
 # define directories
-target_dir = 'target'
+target_dir = 'build'
 target_app_dir = "#{target_dir}/app"
 target_chrome_app_dir = "#{target_dir}/chrome-app"
-
+KELVI_VERSION="1.0"
 
 ###
 
@@ -23,65 +26,70 @@ target_chrome_app_dir = "#{target_dir}/chrome-app"
 build_dir = "build"
 CURRENT_VERSION = "1.0"
 
-task 'create:builds', 'create builds',  ->
-    #hold all artifacts to be built in temporary folder /target/
-    invoke 'copy:dependencies'
-
-    #compile app
-    invoke 'compile:app'
-
-    #compile compile chrome app
-    invoke 'compile:chrome-app'
-
-    #create zip packages
-    invoke 'create:kelvi-zip'
-    invoke 'create:kelvi-chrome-app-zip'
-
-    #copy built artifacts to /build folder
-    fs.mkdir "#{build_dir}"
-    ncp "#{target_app_dir}/*.zip", build_dir
-
-
 #recursively delete a folder
-rmr = (path) ->
-    if fs.existsSync path
-        fs.readdirSync(path).forEach((file,index)->
-            curPath = path + "/" + file
+rmr = (path) -> rimraf.sync path
 
-            if fs.statSync(curPath).isDirectory()
-                rmr curPath
-                fs.rmdirSync curPath
-            else
-                fs.unlinkSync curPath
-        )
-
-cleanCreateFolder = (folder) ->
-    fs.exists folder,(exists) ->
-        if exists
-            console.log "#{folder} exists. removing"
-            rmr folder
-        console.log "creating folder #{folder}" 
-        fs.mkdir folder, (args) ->
-
+#create a folder if it doesnt exists
 createFolderIfNotExists = (folder) ->
     fs.exists folder,(exists) ->
         if not exists
-            console.log "creating folder #{folder}" 
-            fs.mkdir folder, (args) ->
+            fs.mkdirSync folder, (err,stdout,stderr) ->
+                if err
+                    console.log err
 
-task 'create:target', 'create target folder', ->
+task 'clean:all', 'clean all the relevent folders', ->
+    rimraf.sync target_dir 
+
+task 'build:all', 'create all required build packages', ->
+    invoke 'clean:all'
+    invoke 'create:app'
+    #invoke 'create:chrome-app'
+
+task 'create:app', 'create all target folders', ->
+    console.log "Creating app"
+    invoke 'create:target-app-folders'
+    invoke 'create:copy-dependencies'
+    invoke 'compile:all'
+    #invoke 'create:package-app'
+
+
+task 'create:package-app', 'create all packages', ->
+    console.log "creating packages"
+    archive = archiver.create('zip')
+    output = fs.createWriteStream("#{target_app_dir}/kelvi.zip");
+    
+    output.on 'close', () ->
+      console.log('archiver has been finalized and the output file descriptor has closed.');
+    
+
+    archive.on 'error', (err) ->
+      throw err;
+
+    archive.pipe output
+
+    #package as zip
+    archive.bulk([
+      { src: ["#{target_app_dir}/"], expand: true},
+    ]);
+
+    archive.finalize (err) ->
+        console.log err
+
+task 'watch:app', 'create all target folders', ->
+    invoke 'create:app'
+    fs.watch 'src', () ->
+        invoke 'create:app'
+
+task 'create:target-app-folders', 'create all target folders', ->
     folders = [target_dir,target_app_dir]
     for folder in folders
-        cleanCreateFolder folder
+        createFolderIfNotExists folder
 
-task 'copy:dependencies', 'copy dependencies', ->
-
-    #create target folders
-    invoke 'create:target'
-
+task 'create:copy-dependencies', 'copy all required dependencies', ->
+    console.log "copying dependencies"
     folders = [
         'css/',
-        'js/'
+        'js/',
     ]
 
     for file in folders
@@ -93,60 +101,53 @@ task 'copy:dependencies', 'copy dependencies', ->
         'css/style.css'
         'gear.png',
         'js/jquery.min-1.10.2.js',
-        'js/angular.min-1.2.6.js'
+        'js/angular.min-1.2.6.js',
+        'js/jaadi-1.0.js',
     ]
 
     for file in dependencies
         if fs.existsSync #{target_app_dir}
-            console.log "reading from #{file} and writing to #{target_app_dir}/#{file}"
-            #fs.createReadStream(file).pipe(fs.createWriteStream("#{target_app_dir}/#{file}"))
+            target_file = "#{target_app_dir}/#{file}"
+            console.log "reading from #{file} and writing to #{target_file}"            
+            ncp file ,target_file
 
-task 'compile:app', 'create distro', ->
-    console.log 'Creating dir ./dist'
+task 'compile:all', 'compile all coffeescript modules', ->
+    console.log "compiling modules"
 
-    invoke 'create:target'
-    invoke 'copy:dependencies'
-
-    concat_result = ''
-    target_js = "#{target_app_dir}/js"
-    target_coffee_file = "#{target_app_dir}/app.coffee"
-
-    file_order = [
-        "dabba.coffee",
-        "config.coffee",
-        "dashboard.coffee",
-        "sodashboard.coffee",
-        "app.coffee"
+    files = [
+        "config",
+        "dashboard",
+        "sodashboard",
+        "app",
     ]
 
-    console.log file_order
+    single_src = "#{target_app_dir}/kelvi-#{KELVI_VERSION}.coffee"
 
-    for file in file_order
-        exec "coffee -cb -o #{target_js} src/#{file} ", (err, stdout, stderr) ->
-            if err
-                console.log 'FAILED:', err
-            else
-                console.log 'SUCCESS!'
+    contents = new Array 
+    remaining = files.length
 
+    for file, index in files then do (file, index) ->
+        fs.readFile "src/#{file}.coffee", 'utf8', (err, fileContents) ->
+          throw err if err
+          contents[index] = fileContents
 
-task 'compile:chrome-app', 'create chrome app distro', ->
+          #chaining process fn here
+          process() if --remaining is 0
 
-    #create the basic distro
-    invoke 'compile:app'
-
-    # create a seperate app directory  as /target/chrome-app
+    process = ->
+        fs.writeFile single_src, contents.join('\n\n'), 'utf8', (err) ->
+          throw err if err
     
-    chrome_target_dir = target_chrome_app_dir
-    chrome_src = 'chrome-app'
+    exec "coffee --compile --bare --output  #{target_app_dir}/js #{single_src}", (err, stdout, stderr) ->
+        if err
+            throw err
+        else
+            rimraf.sync single_src
 
-    if fs.exists(chrome_target_dir)
-        fs.rmdir chrome_target_dir
-    
-    fs.mkdir chrome_target_dir
 
-    #copy the files from chrome-app files into /target/chrome-app
-    ncp chrome_src,target_chrome_app_dir
 
-    #copy the files from /target/app into /target/chrome-app
-    ncp target_app_dir,target_chrome_app_dir
+task 'create:package', 'creating required package bundles', ->
+    console.log "create package"
 
+task 'create:chrome-app', 'creating chrome-app', ->
+    console.log "create chrome app"
