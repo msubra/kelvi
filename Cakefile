@@ -1,22 +1,20 @@
 fs = require 'fs'
+sys = require 'sys'
 
-rimraf = require('rimraf')
+rimraf = require 'rimraf'
 ncp = require('ncp').ncp
-ncp.limit = 16;
-alreadyRan = no
 {exec} = require 'child_process'
 zip = new require('node-zip')();
-archiver = require 'archiver'
-sh = require 'execSync'
+
+#define settings
+ncp.limit = 16;
+alreadyRan = no
 
 # define directories
 target_dir = 'build'
 target_app_dir = "#{target_dir}/app"
 target_chrome_app_dir = "#{target_dir}/chrome-app"
 KELVI_VERSION="1.0"
-
-sys = require('sys')
-exec = require('child_process').exec;
 
 ###
 
