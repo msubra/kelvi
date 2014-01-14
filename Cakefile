@@ -7,12 +7,16 @@ alreadyRan = no
 {exec} = require 'child_process'
 zip = new require('node-zip')();
 archiver = require 'archiver'
+sh = require 'execSync'
 
 # define directories
 target_dir = 'build'
 target_app_dir = "#{target_dir}/app"
 target_chrome_app_dir = "#{target_dir}/chrome-app"
 KELVI_VERSION="1.0"
+
+sys = require('sys')
+exec = require('child_process').exec;
 
 ###
 
@@ -37,6 +41,7 @@ createFolderIfNotExists = (folder) ->
                 if err
                     console.log err
 
+
 task 'clean:all', 'clean all the relevent folders', ->
     rimraf.sync target_dir 
 
@@ -50,30 +55,16 @@ task 'create:app', 'create all target folders', ->
     invoke 'create:target-app-folders'
     invoke 'create:copy-dependencies'
     invoke 'compile:all'
-    #invoke 'create:package-app'
-
-
+    invoke 'create:package-app'
+    
+    
 task 'create:package-app', 'create all packages', ->
     console.log "creating packages"
-    archive = archiver.create('zip')
-    output = fs.createWriteStream("#{target_app_dir}/kelvi.zip");
-    
-    output.on 'close', () ->
-      console.log('archiver has been finalized and the output file descriptor has closed.');
-    
 
-    archive.on 'error', (err) ->
-      throw err;
-
-    archive.pipe output
-
-    #package as zip
-    archive.bulk([
-      { src: ["#{target_app_dir}/"], expand: true},
-    ]);
-
-    archive.finalize (err) ->
-        console.log err
+    setTimeout () ->
+        child = exec "zip -r #{target_dir}/kelvi-#{KELVI_VERSION}.zip #{target_app_dir}", (error, stdout, stderr) ->
+            console.log('exec:' + stdout);
+    ,1000
 
 task 'watch:app', 'create all target folders', ->
     invoke 'create:app'
