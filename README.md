@@ -7,12 +7,12 @@ Kelvi is a minimalistic themed **stackoverflow questions monitor** on your favou
 Topics are [tags from stackoverflow](https://stackoverflow.com/tags).
 
 
-## How to use?
+## How to use
 
 1. Get the [zip](build/kelvi-1.0.zip) package and unzip in any folder you want
 2. Run kelvi.html
 
-## Customizations?
+## Customizations
 
 ![Alt text](imgs/kelvi-dashboard-config-1.png)
 
