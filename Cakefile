@@ -109,7 +109,6 @@ task 'compile:all', 'compile all coffeescript modules', ->
 
     files = [
         "config",
-        "dashboard",
         "sodashboard",
         "app",
     ]
