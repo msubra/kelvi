@@ -32,12 +32,13 @@ CURRENT_VERSION = "1.0"
 rmr = (path) -> rimraf.sync path
 
 #create a folder if it doesnt exists
-createFolderIfNotExists = (folder) ->
+createFolderIfNotExists = (folder,callback=()->) ->
     fs.exists folder,(exists) ->
         if not exists
             fs.mkdirSync folder, (err,stdout,stderr) ->
                 if err
                     console.log err
+                callback()
 
 
 task 'clean:all', 'clean all the relevent folders', ->
@@ -46,7 +47,7 @@ task 'clean:all', 'clean all the relevent folders', ->
 task 'build:all', 'create all required build packages', ->
     invoke 'clean:all'
     invoke 'create:app'
-    #invoke 'create:chrome-app'
+    invoke 'create:chrome-app'
 
 task 'create:app', 'create all target folders', ->
     console.log "Creating app"
@@ -62,6 +63,7 @@ task 'create:package-app', 'create all packages', ->
     setTimeout () ->
         child = exec "zip -r #{target_dir}/kelvi-#{KELVI_VERSION}.zip #{target_app_dir}", (error, stdout, stderr) ->
             console.log('exec:' + stdout);
+            rimraf.sync target_app_dir
     ,1000
 
 task 'watch:app', 'create all target folders', ->
@@ -79,6 +81,7 @@ task 'create:copy-dependencies', 'copy all required dependencies', ->
     folders = [
         'css/',
         'js/',
+        'images/'
     ]
 
     for file in folders
@@ -92,6 +95,8 @@ task 'create:copy-dependencies', 'copy all required dependencies', ->
         'js/jquery.min-1.10.2.js',
         'js/angular.min-1.2.6.js',
         'js/jaadi-1.0.js',
+        'images/kelvi-128.png',
+        'images/kelvi-16.png',
     ]
 
     for file in dependencies
@@ -140,3 +145,25 @@ task 'create:package', 'creating required package bundles', ->
 
 task 'create:chrome-app', 'creating chrome-app', ->
     console.log "create chrome app"
+
+    foldersToCopy = ["chrome-app",target_app_dir]
+    copySeq = (target,first,rest...) ->
+        console.log "copying #{first}/ to #{target}"
+        ncp "#{first}/", target
+        if rest.length > 0
+            setTimeout () ->
+                copySeq target, rest
+            ,500
+
+    copySeq target_chrome_app_dir,foldersToCopy...
+
+    #create chrome-zip package
+    setTimeout () ->
+        child = exec "zip -r #{target_dir}/kelvi-chrome-app-#{KELVI_VERSION}.zip #{target_chrome_app_dir}", (error, stdout, stderr) ->
+            console.log('exec:' + stdout);
+
+            #delete chrome-app dir after zip is created
+            rimraf.sync target_chrome_app_dir
+    ,1000
+
+

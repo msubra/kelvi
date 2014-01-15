@@ -16,6 +16,9 @@ Developed using Coffeescript
 
 ## Customizations?
 
+### Understanding the dashboard
+!(imgs/kelvi-dashboard-config-1.png)
+
 Kelvi allows you to make customizations as much as possible. Since this is designed for developers, It allows customizations to most of the part. 
 
 * Add / Remove new topics to watch
