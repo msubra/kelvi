@@ -95,8 +95,7 @@ task 'create:copy-dependencies', 'copy all required dependencies', ->
         'js/jquery.min-1.10.2.js',
         'js/angular.min-1.2.6.js',
         'js/jaadi-1.0.js',
-        'images/kelvi-128.png',
-        'images/kelvi-16.png',
+        'images/',
     ]
 
     for file in dependencies
