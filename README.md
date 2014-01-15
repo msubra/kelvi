@@ -6,11 +6,10 @@ Kelvi is a minimalistic themed **stackoverflow questions watcher** on your favou
 
 Topics are [tags from stackoverflow](https://stackoverflow.com/tags).
 
-Developed using Coffeescript
 
 ## How to use?
 
-1. Get the zip package and unzip in any folder you want
+1. Get the [zip](https://github.com/msubra/kelvi/blob/master/build/kelvi-1.0.zip) package and unzip in any folder you want
 2. Run kelvi.html
 
 ### Understanding the dashboard
