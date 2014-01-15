@@ -1,6 +1,6 @@
 # Kelvi
 
-Kelvi is a minimalistic themed **stackoverflow questions watcher** on your favourite topic. If you are a fanatic user of stackoverflow and live with and in it, this should be very handy to monitor the questions on your favorite topics.
+Kelvi is a minimalistic themed **stackoverflow questions monitor** on your favourite topic. If you are a fanatic user of stackoverflow and live in it, this should be very handy to monitor the questions on your favorite topics.
 
 ![Alt text](imgs/kelvi-dashboard-1.png)
 
@@ -11,8 +11,6 @@ Topics are [tags from stackoverflow](https://stackoverflow.com/tags).
 
 1. Get the [zip](build/kelvi-1.0.zip) package and unzip in any folder you want
 2. Run kelvi.html
-
-### Understanding the dashboard
 
 ## Customizations?
 
@@ -28,14 +26,15 @@ Kelvi allows you to make customizations as much as possible. Since this is desig
 
 ## Chrome App
 
-Kelvi is also packaged and available as Chrome app from Chrome App store and it is also available as regular HTML app for non-chrome users. 
+Kelvi is also available as Chrome app. Get the [chrome app package](build/kelvi-chrome-app-1.0.zip) and load as [unpacked Extension](http://developer.chrome.com/extensions/getstarted.html#unpacked).
 
-## How to install?
-
-Designed for developers by developer
 
 ## Credits:
 
-Coffeescript
-Sublimetext
-Chrome/Firefox
+* [Coffeescript](http://coffeescript.org/)
+* [AngularJS](http://angularjs.org/)
+* [jQuery](http://jquery.com/)
+* [jaadi](https://github.com/msubra/jaadi)
+* [nodejs](http://nodejs.org/)
+* [Sublime Text](http://www.sublimetext.com/)
+
