@@ -4,6 +4,10 @@
 
 <head>
 
+	<link rel="icon" 
+      type="image/png" 
+      href="images/kelvi-16.png">
+
 	<link rel="stylesheet" href="css/style.css">
 
 	<script src="js/angular.min-1.2.6.js"></script>
@@ -11,10 +15,12 @@
 
 	<script src="js/jaadi-1.0.js"></script>
 	<script src="js/kelvi-1.0.js"></script>
+
 </head>
 
 
 <body ng-controller="KelviController" ng-init="init()" width="600px">
+
 <a href="config.html" target="_blank"><div style="background-image:url(gear.png); width:16px; height:16px; float:right;"></div></a>
 
 	<section class="topic" ng-repeat="panel in panels" ng-init="panel.init()">
@@ -38,7 +44,6 @@
 		</div>
 		<span ng-init="panel.update();"></span>
 	</section>
-
 
 </body>
 
