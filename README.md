@@ -2,6 +2,8 @@
 
 Kelvi is a minimalistic themed **stackoverflow questions watcher** on your favourite topic. If you are a fanatic user of stackoverflow and live with and in it, this should be very handy to monitor the questions on your favorite topics.
 
+![Alt text](imgs/kelvi-dashboard-1.png)
+
 Topics are [tags from stackoverflow](https://stackoverflow.com/tags).
 
 Developed using Coffeescript
@@ -12,12 +14,10 @@ Developed using Coffeescript
 2. Run kelvi.html
 
 ### Understanding the dashboard
-![Alt text](imgs/kelvi-dashboard-1.png)
 
 ## Customizations?
 
-### Understanding the dashboard
-!(imgs/kelvi-dashboard-config-1.png)
+![Alt text](imgs/kelvi-dashboard-config-1.png)
 
 Kelvi allows you to make customizations as much as possible. Since this is designed for developers, It allows customizations to most of the part. 
 
