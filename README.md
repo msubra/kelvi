@@ -12,7 +12,7 @@ Developed using Coffeescript
 2. Run kelvi.html
 
 ### Understanding the dashboard
-!(imgs/kelvi-dashboard-1.png)
+![Alt text](imgs/kelvi-dashboard-1.png)
 
 ## Customizations?
 
