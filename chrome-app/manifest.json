@@ -10,7 +10,7 @@
 
   },
   
-  "icons": { "16": "calculator-16.png", "128": "calculator-128.png" },
+  "icons": { "16": "images/kelvi-16.png", "128": "images/kelvi-128.png" },
   
   "permissions" : [
     "https://*.stackoverflow.com/",
