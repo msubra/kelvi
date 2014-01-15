@@ -31,7 +31,6 @@
 						<td>Refresh Rate (ms)</td>
 						<td># questions</td>
 						<td  colspan="4">Watches - Enable</td>
-						<td  colspan="4">Default</td>
 					</tr>
 
 					<tr ng-repeat="topic in topics()" style="text-align:center;">
@@ -48,14 +47,8 @@
 						
 						<td ng-repeat="watch in config(topic.topic).watches" style="text-align:center;">
 							<input type="checkbox" ng-model="watch.enable" ng-change="decideWatchToShow(topic.topic,watch);saveConfig();" id="{{topic.topic}}_{{watch.title}}"><label for="{{topic.topic}}_{{watch.title}}">
-								{{watch.title}} - {{watch.enable}}
+								{{watch.title}}
 							</label>
-						</td>
-
-						<td>
-							<select>
-								<option ng-repeat="watch in watchesAvailable(topic.topic)" value="{{watch.category}}">{{watch.title}}</option>
-							</select>
 						</td>
 
 					</tr>
