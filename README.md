@@ -9,7 +9,7 @@ Topics are [tags from stackoverflow](https://stackoverflow.com/tags).
 
 ## How to use?
 
-1. Get the [zip](https://github.com/msubra/kelvi/blob/master/build/kelvi-1.0.zip) package and unzip in any folder you want
+1. Get the [zip](build/kelvi-1.0.zip) package and unzip in any folder you want
 2. Run kelvi.html
 
 ### Understanding the dashboard
