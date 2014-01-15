@@ -28,7 +28,6 @@ Kelvi allows you to make customizations as much as possible. Since this is desig
 
 Kelvi is also available as Chrome app. Get the [chrome app package](build/kelvi-chrome-app-1.0.zip) and load as [unpacked Extension](http://developer.chrome.com/extensions/getstarted.html#unpacked).
 
-
 ## Credits:
 
 * [Coffeescript](http://coffeescript.org/)
